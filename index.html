@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>مليكة وتاج النجوم</title>
-<link rel="icon" href="https://api.iconify.design/fluent-emoji/princess.svg">
+<title>مليكة والنجوم</title>
+<link rel="icon" href="https://api.iconify.design/fluent-emoji/girl.svg">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%;overflow:hidden;font-family:Tahoma,sans-serif;background:#1a0b2e;user-select:none}
@@ -14,18 +14,22 @@
   .overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;background:radial-gradient(circle at 50% 30%,rgba(120,60,200,.95),rgba(20,5,45,1));color:#fff;z-index:10}
   .overlay.hidden{display:none}
   .title{font-size:clamp(28px,9vw,44px);font-weight:900;background:linear-gradient(180deg,#fff2a8,#ffb3f0,#c88bff);-webkit-background-clip:text;color:transparent;text-shadow:0 4px 14px rgba(255,180,255,.6)}
-  .subtitle{font-size:clamp(14px,4vw,18px);color:#ffd9ff;margin:8px 0 14px}
-  .how{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.22);border-radius:14px;padding:10px 12px;font-size:clamp(12px,3.6vw,16px);line-height:1.9;max-width:360px;margin-bottom:14px;display:flex;flex-direction:column;gap:4px;align-items:center}
+  .subtitle{font-size:clamp(15px,4.4vw,20px);color:#ffd9ff;margin:8px 0 14px}
+  .how{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.22);border-radius:14px;padding:12px 14px;font-size:clamp(13px,4vw,17px);line-height:2;max-width:380px;margin-bottom:14px;display:flex;flex-direction:column;gap:4px;align-items:center;color:#fff}
   .how-row{display:flex;align-items:center;gap:8px}
-  .how-row img{width:1.4em;height:1.4em}
-  #hud{position:absolute;top:6px;left:6px;right:6px;display:flex;justify-content:space-between;z-index:5;pointer-events:none;font-weight:800}
-  .pill{background:rgba(30,8,60,.7);border:1.5px solid rgba(255,255,255,.3);color:#fff;padding:4px 10px;border-radius:999px;font-size:clamp(12px,3.8vw,16px);display:flex;align-items:center;gap:5px}
+  .how-row img{width:1.4em;height:1.4em;flex:none}
+  #hud{position:absolute;top:6px;left:6px;right:6px;display:flex;justify-content:space-between;gap:4px;z-index:5;pointer-events:none;font-weight:800}
+  .pill{background:rgba(30,8,60,.7);border:1.5px solid rgba(255,255,255,.3);color:#fff;padding:4px 10px;border-radius:999px;font-size:clamp(11px,3.4vw,15px);display:flex;align-items:center;gap:5px;white-space:nowrap}
   .pill img{height:1.1em;width:1.1em}
   .btn{font-size:clamp(18px,5.4vw,24px);font-weight:900;color:#4a1a66;background:linear-gradient(180deg,#fff0a8,#ffcf3d);padding:12px 36px;border-radius:999px;border:none;box-shadow:0 6px 0 #c9901a}
   .btn:active{transform:translateY(4px);box-shadow:0 2px 0 #c9901a}
   .btn:disabled{filter:grayscale(.6);opacity:.7}
   .hero{width:clamp(72px,22vw,110px);height:clamp(72px,22vw,110px);margin-bottom:6px;animation:bob 1.6s ease-in-out infinite}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .toast{position:absolute;top:20%;left:50%;transform:translateX(-50%);z-index:20;background:rgba(30,8,60,.92);border:2.5px solid #FFD700;color:#fff;padding:12px 22px;border-radius:16px;font-size:clamp(16px,5vw,22px);font-weight:900;pointer-events:none;white-space:nowrap;box-shadow:0 0 24px rgba(255,215,0,.45)}
+  .toast.hidden{display:none}
+  .toast.show{animation:pop .45s cubic-bezier(.2,1.6,.4,1)}
+  @keyframes pop{0%{transform:translateX(-50%) scale(.4);opacity:0}70%{transform:translateX(-50%) scale(1.12);opacity:1}100%{transform:translateX(-50%) scale(1)}}
 </style>
 </head>
 <body>
@@ -34,34 +38,39 @@
     <canvas id="cv"></canvas>
     <div id="hud">
       <div class="pill"><img src="https://api.iconify.design/mdi/star.svg?color=%23FFD700" alt="نجمة"><span id="s">0</span></div>
-      <div class="pill" id="l">💖💖💖</div>
+      <div class="pill" id="lvlp">المستوى 1</div>
+      <div class="pill" id="l"></div>
     </div>
     <div class="overlay" id="st">
-      <img class="hero" src="https://api.iconify.design/fluent-emoji/princess.svg" alt="مليكة">
-      <h1 class="title">مليكة وتاج النجوم</h1>
+      <img class="hero" src="https://api.iconify.design/fluent-emoji/girl.svg" alt="مليكة">
+      <h1 class="title">مليكة والنجوم</h1>
       <p class="subtitle">ساعدي مليكة تجمع النجوم والقلوب!</p>
       <div class="how">
         <div class="how-row"><img src="https://api.iconify.design/mdi/star.svg?color=%23FFD700" alt=""> اجمعي النجوم والقلوب <img src="https://api.iconify.design/mdi/heart.svg?color=%23FF4D8D" alt=""></div>
         <div class="how-row"><img src="https://api.iconify.design/mdi/bomb.svg?color=%23E53935" alt=""> تجنبي القنابل <img src="https://api.iconify.design/mdi/bomb.svg?color=%23E53935" alt=""></div>
-        <div class="how-row">👆 حركي الأميرة بإصبعك</div>
+        <div class="how-row">🎁 كل 10 نجوم = مستوى جديد + مكافأة!</div>
+        <div class="how-row">👆 حركي مليكة بإصبعك</div>
       </div>
       <button class="btn" id="p" disabled>جاري التحميل...</button>
     </div>
     <div class="overlay hidden" id="ov">
       <h1 class="title">انتهت اللعبة</h1>
       <p class="subtitle" id="os">نتيجتك: 0</p>
+      <p class="subtitle" id="ol" style="margin-top:-6px"></p>
       <button class="btn" id="a">العب مرة أخرى</button>
     </div>
+    <div class="toast hidden" id="toast"></div>
   </div>
 </div>
 <script>
 (function(){
   var cv=document.getElementById('cv'),ctx=cv.getContext('2d');
-  var s=document.getElementById('s'),l=document.getElementById('l');
-  var st=document.getElementById('st'),ov=document.getElementById('ov'),os=document.getElementById('os');
+  var s=document.getElementById('s'),l=document.getElementById('l'),lvlp=document.getElementById('lvlp');
+  var st=document.getElementById('st'),ov=document.getElementById('ov'),os=document.getElementById('os'),ol=document.getElementById('ol');
   var pb=document.getElementById('p'),ab=document.getElementById('a');
+  var toastEl=document.getElementById('toast');
   var W=0,H=0,DPR=1;
-  var run=false,sc=0,lv=3,items=[],p={x:0,y:0,w:0,h:0,tx:0},sp=0;
+  var run=false,sc=0,lives=3,lvl=1,items=[],p={x:0,y:0,w:0,h:0,tx:0},sp=0;
 
   var ICONS={
     star:{u:'https://api.iconify.design/mdi/star.svg?color=%23FFD700&width=192'},
@@ -69,10 +78,17 @@
     flower:{u:'https://api.iconify.design/mdi/flower.svg?color=%23FF69B4&width=192'},
     star2:{u:'https://api.iconify.design/mdi/star-four-points.svg?color=%23FFEE58&width=192'},
     bomb:{u:'https://api.iconify.design/mdi/bomb.svg?color=%232D2D2D&width=192'},
-    malika:{u:'https://api.iconify.design/fluent-emoji/princess.svg?width=192'},
-    basket:{u:'https://api.iconify.design/mdi/basket.svg?color=%23C68B59&width=192'}
+    malika:{u:'https://api.iconify.design/fluent-emoji/girl.svg?width=192'},
+    basket:{u:'https://api.iconify.design/mdi/basket.svg?color=%23C68B59&width=192'},
+    trophy:{u:'https://api.iconify.design/fluent-emoji/trophy.svg?width=192'}
   };
   var GD=['star','heart','flower','star2'];
+  var REWARDS=[
+    '🎁 مكافأة! قلب جديد ❤️',
+    '🌟 مكافأة! + نجوم إضافية ✨',
+    '🎀 مكافأة! مليكة أسرع الآن!',
+    '👑 وصلتي مستوى جديد! استمتعي 🎉'
+  ];
 
   function loadImg(key){
     return new Promise(function(res){
@@ -102,6 +118,7 @@
   function sStar(){beep(880,0.08,'sine',0.22);beep(1320,0.12,'sine',0.2,0.07);}
   function sHeart(){beep(660,0.08,'triangle',0.22);beep(990,0.12,'triangle',0.2,0.06);}
   function sFlower(){beep(1046,0.09,'sine',0.2);beep(1568,0.12,'sine',0.18,0.08);}
+  function sLevelUp(){[523,659,784,1046,1318].forEach(function(f,i){beep(f,0.12,'triangle',0.22,i*0.09);});}
   function sBomb(){
     var a=ac();if(!a)return;
     var t=a.currentTime;
@@ -123,6 +140,16 @@
   function sOver(){[523,466,392,330,262].forEach(function(f,i){beep(f,0.2,'sine',0.2,i*0.14);});}
   function sClick(){beep(1200,0.05,'square',0.08);}
 
+  var toastT=null;
+  function toast(msg){
+    toastEl.textContent=msg;
+    toastEl.classList.remove('hidden','show');
+    void toastEl.offsetWidth;
+    toastEl.classList.add('show');
+    clearTimeout(toastT);
+    toastT=setTimeout(function(){toastEl.classList.add('hidden');},2200);
+  }
+
   function resize(){
     var r=document.getElementById('stage').getBoundingClientRect();
     W=r.width;H=r.height;DPR=Math.min(window.devicePixelRatio||1,2);
@@ -130,11 +157,15 @@
     ctx.setTransform(DPR,0,0,DPR,0,0);
     p.w=Math.max(50,W*0.14);p.h=p.w;p.y=H-p.h-8;p.x=W/2;p.tx=W/2;
   }
+  function heartImg(size){
+    return '<img src="'+ICONS.heart.u.replace('width=192','width='+size)+'" alt="">';
+  }
   function hud(){
     s.textContent=sc;
-    l.innerHTML='<img src="'+ICONS.heart.u.replace('width=192','width=48')+'" alt="">'.repeat(Math.max(0,lv))+'🖤'.repeat(Math.max(0,3-lv));
+    lvlp.textContent='المستوى '+lvl;
+    l.innerHTML=heartImg(48).repeat(Math.max(0,lives))+'<span style="filter:grayscale(1);opacity:.6">🖤</span>'.repeat(Math.max(0,3-lives));
   }
-  function rst(){sc=0;lv=3;items=[];sp=0;resize();hud();}
+  function rst(){sc=0;lives=3;lvl=1;items=[];sp=0;resize();hud();}
   function mv(e){
     var c=e.touches?e.touches[0].clientX:e.clientX,r=document.getElementById('stage').getBoundingClientRect();
     var nx=c-r.left;var pw=p.w;
@@ -143,25 +174,39 @@
   window.addEventListener('mousemove',mv,{passive:true});
   window.addEventListener('touchmove',function(e){mv(e);e.preventDefault();},{passive:false});
   window.addEventListener('touchstart',function(e){ac();mv(e);},{passive:true});
+
+  function checkLevelUp(){
+    var nl=Math.floor(sc/10)+1;
+    if(nl>lvl){
+      lvl=nl;
+      var reward=REWARDS[Math.floor(Math.random()*REWARDS.length)];
+      if(reward.indexOf('قلب')>=0&&lives<3){lives++;hud();}
+      else if(reward.indexOf('نجوم')>=0){sc+=3;hud();}
+      toast('🎉 المستوى '+lvl+'! '+reward);
+      sLevelUp();
+    }
+  }
   function spw(){
-    var b=Math.random()<0.15;
+    var chance=Math.min(0.35,0.13+lvl*0.02);
+    var b=Math.random()<chance;
     var em=b?'bomb':GD[Math.floor(Math.random()*GD.length)];
     var sz=b?Math.max(32,W*0.095):Math.max(26,W*0.075);
-    items.push({x:sz/2+Math.random()*(W-sz),y:-sz,sz:sz,em:em,b:b,vy:(0.9+Math.random())*1.5,rot:Math.random()*Math.PI*2,rv:(Math.random()-0.5)*2});
+    var vy=(0.9+Math.random())*1.5*(1+lvl*0.07);
+    items.push({x:sz/2+Math.random()*(W-sz),y:-sz,sz:sz,em:em,b:b,vy:vy,rot:Math.random()*Math.PI*2,rv:(Math.random()-0.5)*2});
   }
   function up(dt){
     if(!run)return;
     sp-=dt*60;
-    if(sp<=0){spw();sp=Math.max(18,34*(0.8+Math.random()*0.4));}
+    if(sp<=0){spw();sp=Math.max(14,34-lvl*1.5)*(0.8+Math.random()*0.4);}
     var px=p.x,py=p.y,pw=p.w,ph=p.h;
     p.x+=(p.tx-p.x)*Math.min(1,dt*16);
     p.x=Math.max(pw/2,Math.min(W-pw/2,p.x));p.tx=Math.max(pw/2,Math.min(W-pw/2,p.tx));
     for(var i=items.length-1;i>=0;i--){
       var it=items[i];it.y+=it.vy*dt*60;it.rot+=it.rv*dt;
       if(Math.abs(it.x-px)<pw/2+it.sz*0.36 && it.y+it.sz*0.36>py+ph*0.15 && it.y-it.sz*0.36<py+ph){
-        if(it.b){lv--;hud();sBomb();if(lv<=0){end();}}
+        if(it.b){lives--;hud();sBomb();if(lives<=0){end();}}
         else{
-          sc++;hud();
+          sc++;hud();checkLevelUp();
           if(it.em==='heart')sHeart();
           else if(it.em==='flower')sFlower();
           else sStar();
@@ -203,7 +248,10 @@
     rst();run=true;st.classList.add('hidden');ov.classList.add('hidden');hud();
   }
   function end(){
-    run=false;os.textContent='نتيجتك: '+sc;ov.classList.remove('hidden');sOver();
+    run=false;
+    os.textContent='نتيجتك: '+sc;
+    ol.textContent='وصلتي للمستوى '+lvl+'! 🌟';
+    ov.classList.remove('hidden');sOver();
   }
   pb.addEventListener('click',start);
   ab.addEventListener('click',start);
