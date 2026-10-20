@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>مليكة وتاج النجوم</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;font-family:Tahoma,sans-serif;background:#1a0b2e;user-select:none}
+  #game{position:fixed;inset:0}
+  #stage{position:relative;width:100%;height:100%;overflow:hidden}
+  canvas{display:block;width:100%;height:100%;touch-action:none}
+  .overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:12px;background:radial-gradient(circle at 50% 30%,rgba(120,60,200,.95),rgba(20,5,45,1));color:#fff;z-index:10}
+  .overlay.hidden{display:none}
+  .title{font-size:clamp(28px,9vw,44px);font-weight:900;background:linear-gradient(180deg,#fff2a8,#ffb3f0,#c88bff);-webkit-background-clip:text;color:transparent;text-shadow:0 4px 14px rgba(255,180,255,.6)}
+  .subtitle{font-size:clamp(14px,4vw,18px);color:#ffd9ff;margin:8px 0 14px}
+  .how{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.22);border-radius:14px;padding:10px 12px;font-size:clamp(12px,3.6vw,16px);line-height:1.9;max-width:360px;margin-bottom:14px}
+  #hud{position:absolute;top:6px;left:6px;right:6px;display:flex;justify-content:space-between;z-index:5;pointer-events:none;font-weight:800}
+  .pill{background:rgba(30,8,60,.7);border:1.5px solid rgba(255,255,255,.3);color:#fff;padding:4px 10px;border-radius:999px;font-size:clamp(12px,3.8vw,16px)}
+  .btn{font-size:clamp(18px,5.4vw,24px);font-weight:900;color:#4a1a66;background:linear-gradient(180deg,#fff0a8,#ffcf3d);padding:12px 36px;border-radius:999px;border:none;box-shadow:0 6px 0 #c9901a}
+  .btn:active{transform:translateY(4px);box-shadow:0 2px 0 #c9901a}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="stage">
+    <canvas id="cv"></canvas>
+    <div id="hud">
+      <div class="pill">⭐ <span id="s">0</span></div>
+      <div class="pill" id="l">💖💖💖</div>
+    </div>
+    <div class="overlay" id="st">
+      <div style="font-size:clamp(44px,14vw,68px);margin-bottom:6px">👸✨</div>
+      <h1 class="title">مليكة وتاج النجوم</h1>
+      <p class="subtitle">ساعدي مليكة تجمع النجوم والقلوب!</p>
+      <div class="how">⭐ اجمعي النجوم والقلوب 🌸<br>💣 تجنبي القنابل 💣<br>👆 حركي الأميرة بإصبعك</div>
+      <button class="btn" id="p">هيا نلعب! 🎮</button>
+    </div>
+    <div class="overlay hidden" id="ov">
+      <h1 class="title">انتهت اللعبة</h1>
+      <p class="subtitle" id="os">نتيجتك: 0</p>
+      <button class="btn" id="a">العب مرة أخرى</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+  var s=document.getElementById('s'),l=document.getElementById('l');
+  var st=document.getElementById('st'),ov=document.getElementById('ov'),os=document.getElementById('os');
+  var pb=document.getElementById('p'),ab=document.getElementById('a');
+  var W=0,H=0,DPR=1;
+  var run=false,sc=0,lv=3,items=[],p={x:0,y:0,w:0,h:0,tx:0},sp=0;
+  var GD=['⭐','💖','🌸','🌟'];
+  function resize(){
+    var r=document.getElementById('stage').getBoundingClientRect();
+    W=r.width;H=r.height;DPR=Math.min(window.devicePixelRatio||1,2);
+    cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    p.w=Math.max(50,W*0.14);p.h=p.w;p.y=H-p.h-8;p.x=W/2;p.tx=W/2;
+  }
+  function hud(){s.textContent=sc;l.textContent='💖'.repeat(Math.max(0,lv))+'🖤'.repeat(Math.max(0,3-lv));}
+  function rst(){sc=0;lv=3;items=[];sp=0;resize();hud();}
+  function mv(e){
+    var c=e.touches?e.touches[0].clientX:e.clientX,r=document.getElementById('stage').getBoundingClientRect();
+    var nx=c-r.left;var pw=p.w;
+    p.tx=Math.max(pw/2,Math.min(W-pw/2,nx));
+  }
+  window.addEventListener('mousemove',mv,{passive:true});
+  window.addEventListener('touchmove',function(e){mv(e);e.preventDefault();},{passive:false});
+  window.addEventListener('touchstart',mv,{passive:true});
+  function spw(){
+    var b=Math.random()<0.15;
+    var em=b?'💣':GD[Math.floor(Math.random()*GD.length)];
+    var sz=b?Math.max(32,W*0.095):Math.max(26,W*0.075);
+    items.push({x:sz/2+Math.random()*(W-sz),y:-sz,sz:sz,em:em,b:b,vy:(0.9+Math.random())*1.5});
+  }
+  function up(dt){
+    if(!run)return;
+    sp-=dt*60;
+    if(sp<=0){spw();sp=Math.max(18,34*(0.8+Math.random()*0.4));}
+    var px=p.x,py=p.y,pw=p.w,ph=p.h;
+    p.x+=(p.tx-p.x)*Math.min(1,dt*16);
+    p.x=Math.max(pw/2,Math.min(W-pw/2,p.x));p.tx=Math.max(pw/2,Math.min(W-pw/2,p.tx));
+    for(var i=items.length-1;i>=0;i--){
+      var it=items[i];it.y+=it.vy*dt*60;
+      if(Math.abs(it.x-px)<pw/2+it.sz*0.36 && it.y+it.sz*0.36>py+ph*0.15 && it.y-it.sz*0.36<py+ph){
+        if(it.b){lv--;hud();if(lv<=0){end();}}
+        else{sc++;hud();}
+        items.splice(i,1);continue;
+      }
+      if(it.y-it.sz/2>H+10)items.splice(i,1);
+    }
+  }
+  function dr(){
+    ctx.fillStyle='#2b1055';ctx.fillRect(0,0,W,H);
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    for(var i=0;i<items.length;i++){
+      var it=items[i];ctx.save();ctx.translate(it.x,it.y);ctx.font=it.sz+'px serif';ctx.fillText(it.em,0,0);ctx.restore();
+    }
+    var pp=p;ctx.font=(pp.w*0.95)+'px serif';ctx.fillText('👧',pp.x,pp.y+pp.h*0.3);ctx.font=(pp.w*0.58)+'px serif';ctx.fillText('🧺',pp.x,pp.y+pp.h*0.82);
+  }
+  var lst=0;
+  function lp(t){
+    if(!lst)lst=t;
+    var dt=(t-lst)/1000;lst=t;
+    if(dt>0.05)dt=0.05;
+    up(dt);dr();
+    requestAnimationFrame(lp);
+  }
+  function start(){
+    rst();run=true;st.classList.add('hidden');ov.classList.add('hidden');hud();
+  }
+  function end(){
+    run=false;os.textContent='نتيجتك: '+sc;ov.classList.remove('hidden');
+  }
+  pb.addEventListener('click',start);
+  ab.addEventListener('click',start);
+  window.addEventListener('resize',resize,{passive:true});
+  resize();hud();requestAnimationFrame(lp);
+})();
+</script>
+</body>
+</html>
